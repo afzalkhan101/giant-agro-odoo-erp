@@ -23,8 +23,6 @@
         'views/hr_expenses_line_views.xml',
         'views/hr_expenses.xml',
 
-
-        # 'views/monthly_expense_views.xml',
     ],
 
     'demo': [],

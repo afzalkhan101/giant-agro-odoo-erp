@@ -20,24 +20,29 @@
                 <separator string="Monthly Expense Lines"/>
 
                 <field name="monthly_expense_line_ids"
-                       nolabel="1">
+                        readonly="state != 'draft'">
 
-                    <list editable="bottom">
+                        <list editable="bottom">
 
-                        <field name="expense_date"/>
+                            <field name="expense_date"/>
 
-                        <field name="description"/>
+                            <field name="description"/>
 
-                        <field name="category_id"/>
+                            <field name="category_id"
+                                options="{'no_create': True}"/>
 
-                        <field name="amount"/>
+                            <field name="account_id"
+                                column_invisible="True"/>
 
-                        <field name="currency_id"
-                               column_invisible="True"/>
+                            <field name="amount"
+                                sum="Total"/>
 
-                    </list>
+                            <field name="currency_id"
+                                column_invisible="True"/>
 
-                </field>
+                        </list>
+
+                    </field>
 
             </xpath>
 

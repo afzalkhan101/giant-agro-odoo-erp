@@ -1,52 +1,79 @@
 <odoo>
-<record id="hr_expense_form_hide_default_fields" model="ir.ui.view">
-    <field name="name">hr.expense.form.hide.default.fields</field>
+   <record id="hr_expense_form_monthly_expense" model="ir.ui.view">
+    <field name="name">hr.expense.form.monthly.expense</field>
     <field name="model">hr.expense</field>
     <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
-
     <field name="arch" type="xml">
 
-        <!-- Category -->
+        <xpath expr="//header" position="inside">
+            <button name="action_post_monthly_expenses"
+                    string="Post Monthly Expenses"
+                    type="object"
+                    class="btn-primary"
+                    groups="account.group_account_invoice"
+                    invisible="state != 'draft' or account_move_id"/>
+        </xpath>
+        
         <xpath expr="//label[@for='product_id']" position="attributes">
             <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='product_id']" position="attributes">
+            <attribute name="invisible">1</attribute>
+            <attribute name="required">0</attribute>
         </xpath>
 
         <xpath expr="//field[@name='product_id']/.." position="attributes">
             <attribute name="invisible">1</attribute>
         </xpath>
 
-        <!-- Expense Date -->
+
         <xpath expr="//field[@name='date']" position="attributes">
             <attribute name="invisible">1</attribute>
         </xpath>
 
-        <!-- Total -->
-        <xpath expr="//label[@for='total_amount_currency']" position="attributes">
-            <attribute name="invisible">1</attribute>
-        </xpath>
 
-        <xpath expr="//field[@name='total_amount_currency']/.." position="attributes">
-            <attribute name="invisible">1</attribute>
-        </xpath>
 
-        <xpath expr="//label[@name='total_amount_product_cost_label']" position="attributes">
-            <attribute name="invisible">1</attribute>
-        </xpath>
-
-        <xpath expr="//label[@name='total_amount_multicurrency_label']" position="attributes">
-            <attribute name="invisible">1</attribute>
-        </xpath>
-
-        <xpath expr="//field[@name='total_amount'][not(@invisible)]/.." position="attributes">
-            <attribute name="invisible">1</attribute>
-        </xpath>
-
-        <!-- Account -->
         <xpath expr="//field[@name='account_id']" position="attributes">
             <attribute name="invisible">1</attribute>
         </xpath>
 
-    </field>
-</record>
+
+        <xpath expr="//label[@for='total_amount_currency']"
+               position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='total_amount_currency']/.."
+               position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//label[@name='total_amount_product_cost_label']"
+               position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//label[@name='total_amount_multicurrency_label']"
+               position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='total_amount']"
+               position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+
+        <xpath expr="//field[@name='description']/.." position="before">
+                <group>
+                    <field name="monthly_journal_id"
+                        options="{'no_create': True, 'no_open': True}"
+                        readonly="state != 'draft'"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
 
 </odoo>
