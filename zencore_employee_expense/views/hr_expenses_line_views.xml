@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="view_hr_expense_form_inherit_giant_agro"
+            model="ir.ui.view">
+
+        <field name="name">
+            hr.expense.form.inherit.giant.agro
+        </field>
+
+        <field name="model">hr.expense</field>
+
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+
+        <field name="arch" type="xml">
+
+            <xpath expr="//sheet" position="inside">
+
+                <separator string="Monthly Expense Lines"/>
+
+                <field name="monthly_expense_line_ids"
+                       nolabel="1">
+
+                    <list editable="bottom">
+
+                        <field name="expense_date"/>
+
+                        <field name="description"/>
+
+                        <field name="category_id"/>
+
+                        <field name="amount"/>
+
+                        <field name="currency_id"
+                               column_invisible="True"/>
+
+                    </list>
+
+                </field>
+
+            </xpath>
+
+        </field>
+
+    </record>
+
+</odoo>

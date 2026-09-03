@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_expense_line_user,hr.expense.line user,model_hr_expense_line,hr_expense.group_hr_expense_user,1,1,1,1
