@@ -1,0 +1,1403 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!-- ===================================================== -->
+    <!-- PORTAL HOME CARD -->
+    <!-- ===================================================== -->
+
+    <template id="portal_my_home_employee_expense"
+              inherit_id="portal.portal_my_home"
+              name="Employee Expenses">
+
+        <xpath expr="//div[hasclass('o_portal_docs')]"
+               position="before">
+
+            <t t-set="portal_service_category_enable"
+               t-value="True"/>
+
+        </xpath>
+
+        <div id="portal_service_category"
+             position="inside">
+
+            <t t-call="portal.portal_docs_entry">
+
+                <t t-set="title">
+                    My Expenses
+                </t>
+
+                <t t-set="text">
+                    Create and manage your employee expenses
+                </t>
+
+                <t t-set="url"
+                   t-value="'/my/expenses'"/>
+
+                <t t-set="icon"
+                   t-value="'/hr_expense/static/description/icon.png'"/>
+
+                <t t-set="config_card"
+                   t-value="True"/>
+
+            </t>
+
+        </div>
+
+    </template>
+
+
+    <!-- ===================================================== -->
+    <!-- EMPLOYEE NOT FOUND -->
+    <!-- ===================================================== -->
+
+    <template id="portal_employee_not_found"
+              name="Employee Not Found">
+
+        <t t-call="portal.portal_layout">
+
+            <div class="ga-expense-portal">
+
+                <div class="alert alert-warning my-5">
+
+                    <h4>
+                        Employee Profile Not Found
+                    </h4>
+
+                    <p class="mb-0">
+                        Your portal user is not linked
+                        with an employee record.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </t>
+
+    </template>
+
+
+    <!-- ===================================================== -->
+    <!-- DASHBOARD -->
+    <!-- ===================================================== -->
+
+    <template id="portal_employee_expense_dashboard"
+              name="Employee Expense Dashboard">
+
+        <t t-call="portal.portal_layout">
+
+            <div class="ga-expense-portal">
+
+                <t t-if="success">
+
+                    <div class="alert alert-success">
+                        <t t-esc="success"/>
+                    </div>
+
+                </t>
+
+                <t t-if="error">
+
+                    <div class="alert alert-danger">
+                        <t t-esc="error"/>
+                    </div>
+
+                </t>
+
+
+                <section class="ga-expense-hero">
+
+                    <div>
+
+                        <span class="ga-hero-label">
+                            EMPLOYEE PORTAL
+                        </span>
+
+                        <h1>
+                            Employee Expense Portal
+                        </h1>
+
+                        <p>
+                            Manage your monthly expenses,
+                            submit them for approval and
+                            track their status.
+                        </p>
+
+                        <a href="/my/expenses/create"
+                           class="btn ga-primary-btn">
+
+                            <i class="fa fa-plus me-2"/>
+
+                            Create New Expense
+
+                        </a>
+
+                    </div>
+
+                </section>
+
+
+                <div class="row mt-4">
+
+                    <!-- Sidebar -->
+
+                    <div class="col-lg-3">
+
+                        <div class="ga-sidebar">
+
+                            <a href="/my/expenses"
+                               class="ga-sidebar-item active">
+
+                                <i class="fa fa-home"/>
+
+                                Dashboard
+
+                            </a>
+
+                            <a href="/my/expenses/list"
+                               class="ga-sidebar-item">
+
+                                <i class="fa fa-list"/>
+
+                                My Expenses
+
+                            </a>
+
+                            <a href="/my/expenses/create"
+                               class="ga-sidebar-item">
+
+                                <i class="fa fa-plus-circle"/>
+
+                                Create Expense
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-lg-9">
+
+                        <!-- Statistics -->
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6 col-xl-4">
+
+                                <div class="ga-stat-card">
+
+                                    <div class="ga-stat-icon">
+                                        <i class="fa fa-file-text-o"/>
+                                    </div>
+
+                                    <div>
+                                        <h3>
+                                            <t t-esc="total_count"/>
+                                        </h3>
+
+                                        <span>
+                                            Total Expenses
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 col-xl-4">
+
+                                <div class="ga-stat-card">
+
+                                    <div class="ga-stat-icon">
+                                        <i class="fa fa-pencil"/>
+                                    </div>
+
+                                    <div>
+                                        <h3>
+                                            <t t-esc="draft_count"/>
+                                        </h3>
+
+                                        <span>
+                                            Draft
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 col-xl-4">
+
+                                <div class="ga-stat-card">
+
+                                    <div class="ga-stat-icon">
+                                        <i class="fa fa-clock-o"/>
+                                    </div>
+
+                                    <div>
+                                        <h3>
+                                            <t t-esc="pending_count"/>
+                                        </h3>
+
+                                        <span>
+                                            Pending
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 col-xl-4">
+
+                                <div class="ga-stat-card">
+
+                                    <div class="ga-stat-icon">
+                                        <i class="fa fa-check"/>
+                                    </div>
+
+                                    <div>
+                                        <h3>
+                                            <t t-esc="approved_count"/>
+                                        </h3>
+
+                                        <span>
+                                            Approved
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 col-xl-4">
+
+                                <div class="ga-stat-card">
+
+                                    <div class="ga-stat-icon">
+                                        <i class="fa fa-money"/>
+                                    </div>
+
+                                    <div>
+                                        <h3>
+                                            <t t-esc="paid_count"/>
+                                        </h3>
+
+                                        <span>
+                                            Paid
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 col-xl-4">
+
+                                <div class="ga-stat-card">
+
+                                    <div class="ga-stat-icon">
+                                        <i class="fa fa-times"/>
+                                    </div>
+
+                                    <div>
+                                        <h3>
+                                            <t t-esc="rejected_count"/>
+                                        </h3>
+
+                                        <span>
+                                            Rejected
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Recent -->
+
+                        <div class="ga-content-card mt-4">
+
+                            <div class="ga-card-header">
+
+                                <h4>
+                                    Recent Expenses
+                                </h4>
+
+                                <a href="/my/expenses/list">
+                                    View All
+                                    <i class="fa fa-arrow-right ms-1"/>
+                                </a>
+
+                            </div>
+
+                            <div class="table-responsive">
+
+                                <table class="table ga-expense-table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th/>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <t t-foreach="expenses"
+                                           t-as="expense">
+
+                                            <tr>
+
+                                                <td>
+                                                    <strong>
+                                                        <t t-esc="expense.name"/>
+                                                    </strong>
+                                                </td>
+
+                                                <td>
+                                                    <span t-field="expense.date"/>
+                                                </td>
+
+                                                <td>
+                                                    <span t-field="expense.total_amount_currency"
+                                                          t-options='{
+                                                            "widget": "monetary",
+                                                            "display_currency": expense.currency_id
+                                                          }'/>
+                                                </td>
+
+                                                <td>
+
+                                                    <span t-attf-class="ga-status ga-status-#{expense.state}">
+                                                        <t t-esc="expense.state.replace('_', ' ').title()"/>
+                                                    </span>
+
+                                                </td>
+
+                                                <td class="text-end">
+
+                                                    <a t-att-href="'/my/expenses/%s' % expense.id"
+                                                       class="btn btn-sm ga-outline-btn">
+
+                                                        View
+
+                                                    </a>
+
+                                                </td>
+
+                                            </tr>
+
+                                        </t>
+
+
+                                        <t t-if="not expenses">
+
+                                            <tr>
+
+                                                <td colspan="5"
+                                                    class="text-center py-5">
+
+                                                    No expenses found.
+
+                                                </td>
+
+                                            </tr>
+
+                                        </t>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </t>
+
+    </template>
+
+
+    <!-- ===================================================== -->
+    <!-- EXPENSE LIST -->
+    <!-- ===================================================== -->
+
+    <template id="portal_employee_expense_list"
+              name="My Expenses">
+
+        <t t-call="portal.portal_layout">
+
+            <div class="ga-expense-portal">
+
+                <t t-if="success">
+                    <div class="alert alert-success">
+                        <t t-esc="success"/>
+                    </div>
+                </t>
+
+                <t t-if="error">
+                    <div class="alert alert-danger">
+                        <t t-esc="error"/>
+                    </div>
+                </t>
+
+
+                <div class="ga-page-header">
+
+                    <div>
+
+                        <h2>My Expenses</h2>
+
+                        <p>
+                            View and manage all your expenses.
+                        </p>
+
+                    </div>
+
+                    <a href="/my/expenses/create"
+                       class="btn ga-primary-btn">
+
+                        <i class="fa fa-plus me-1"/>
+
+                        New Expense
+
+                    </a>
+
+                </div>
+
+
+                <div class="ga-content-card">
+
+                    <div class="table-responsive">
+
+                        <table class="table ga-expense-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th>#</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th class="text-end">
+                                        Action
+                                    </th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <t t-foreach="expenses"
+                                   t-as="expense">
+
+                                    <tr>
+
+                                        <td>
+                                            <t t-esc="expense.id"/>
+                                        </td>
+
+                                        <td>
+                                            <strong>
+                                                <t t-esc="expense.name"/>
+                                            </strong>
+                                        </td>
+
+                                        <td>
+                                            <span t-field="expense.date"/>
+                                        </td>
+
+                                        <td>
+                                            <span t-field="expense.total_amount_currency"
+                                                  t-options='{
+                                                    "widget": "monetary",
+                                                    "display_currency": expense.currency_id
+                                                  }'/>
+                                        </td>
+
+                                        <td>
+
+                                            <span t-attf-class="ga-status ga-status-#{expense.state}">
+
+                                                <t t-esc="expense.state.replace('_', ' ').title()"/>
+
+                                            </span>
+
+                                        </td>
+
+                                        <td class="text-end">
+
+                                            <a t-att-href="'/my/expenses/%s' % expense.id"
+                                               class="btn btn-sm ga-outline-btn">
+
+                                                View
+
+                                            </a>
+
+                                            <a t-if="expense.state == 'draft'"
+                                               t-att-href="'/my/expenses/%s/edit' % expense.id"
+                                               class="btn btn-sm btn-light ms-1">
+
+                                                Edit
+
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+
+                                </t>
+
+
+                                <t t-if="not expenses">
+
+                                    <tr>
+
+                                        <td colspan="6"
+                                            class="text-center py-5">
+
+                                            No expenses found.
+
+                                        </td>
+
+                                    </tr>
+
+                                </t>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <div t-if="pager"
+                     class="mt-4">
+
+                    <t t-call="portal.pager"/>
+
+                </div>
+
+            </div>
+
+        </t>
+
+    </template>
+
+
+    <!-- ===================================================== -->
+    <!-- CREATE / EDIT FORM -->
+    <!-- ===================================================== -->
+
+    <template id="portal_employee_expense_form"
+              name="Employee Expense Form">
+
+        <t t-call="portal.portal_layout">
+
+            <div class="ga-expense-portal">
+
+                <t t-if="error">
+
+                    <div class="alert alert-danger">
+                        <t t-esc="error"/>
+                    </div>
+
+                </t>
+
+
+                <div class="ga-page-header">
+
+                    <div>
+
+                        <h2 t-if="expense">
+                            Edit Expense
+                        </h2>
+
+                        <h2 t-else="">
+                            Create New Expense
+                        </h2>
+
+                        <p>
+                            Add your monthly expense details.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form t-att-action="('/my/expenses/%s/update' % expense.id) if expense else '/my/expenses/save'"
+                      method="post"
+                      enctype="multipart/form-data"
+                      class="ga-expense-form"
+                      t-att-data-default-date="today">
+
+                    <input type="hidden"
+                           name="csrf_token"
+                           t-att-value="request.csrf_token()"/>
+
+
+                    <div class="ga-content-card p-4">
+
+                        <div class="row">
+
+                            <div class="col-md-8">
+
+                                <label class="form-label">
+                                    Expense Title
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input type="text"
+                                       name="name"
+                                       class="form-control"
+                                       placeholder="e.g. September Monthly Expense"
+                                       required="required"
+                                       t-att-value="expense.name if expense else ''"/>
+
+                            </div>
+
+
+                            <div class="col-md-4">
+
+                                <label class="form-label">
+                                    Employee
+                                </label>
+
+                                <input type="text"
+                                       class="form-control"
+                                       readonly="readonly"
+                                       t-att-value="employee.name"/>
+
+                            </div>
+
+                        </div>
+
+
+                        <hr class="my-4"/>
+
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <h5 class="mb-0">
+                                Expense Lines
+                            </h5>
+
+                            <button type="button"
+                                    class="btn btn-sm ga-outline-btn"
+                                    id="ga_add_expense_line">
+
+                                <i class="fa fa-plus me-1"/>
+
+                                Add Line
+
+                            </button>
+
+                        </div>
+
+
+                        <div class="table-responsive">
+
+                            <table class="table ga-line-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th style="min-width:140px">
+                                            Date
+                                        </th>
+
+                                        <th style="min-width:220px">
+                                            Description
+                                        </th>
+
+                                        <th style="min-width:200px">
+                                            Category
+                                        </th>
+
+                                        <th style="min-width:150px">
+                                            Amount
+                                        </th>
+
+                                        <th width="50"/>
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody id="ga_expense_lines">
+
+                                    <t t-if="expense and expense.monthly_expense_line_ids">
+
+                                        <t t-foreach="expense.monthly_expense_line_ids"
+                                           t-as="line">
+
+                                            <tr class="ga-expense-line-row">
+
+                                                <td>
+
+                                                    <input type="date"
+                                                           name="line_expense_date"
+                                                           required="required"
+                                                           class="form-control"
+                                                           t-att-value="line.expense_date"/>
+
+                                                </td>
+
+                                                <td>
+
+                                                    <input type="text"
+                                                           name="line_description"
+                                                           required="required"
+                                                           class="form-control"
+                                                           t-att-value="line.description"/>
+
+                                                </td>
+
+                                                <td>
+
+                                                    <select name="line_category_id"
+                                                            required="required"
+                                                            class="form-select">
+
+                                                        <option value="">
+                                                            Select Category
+                                                        </option>
+
+                                                        <t t-foreach="categories"
+                                                           t-as="category">
+
+                                                            <option t-att-value="category.id"
+                                                                    t-att-selected="category.id == line.category_id.id">
+
+                                                                <t t-esc="category.display_name"/>
+
+                                                            </option>
+
+                                                        </t>
+
+                                                    </select>
+
+                                                </td>
+
+                                                <td>
+
+                                                    <input type="number"
+                                                           name="line_amount"
+                                                           required="required"
+                                                           min="0.01"
+                                                           step="0.01"
+                                                           class="form-control ga-line-amount"
+                                                           t-att-value="line.amount"/>
+
+                                                </td>
+
+                                                <td>
+
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-outline-danger ga-remove-line">
+
+                                                        <i class="fa fa-trash"/>
+
+                                                    </button>
+
+                                                </td>
+
+                                            </tr>
+
+                                        </t>
+
+                                    </t>
+
+
+                                    <t t-else="">
+
+                                        <tr class="ga-expense-line-row">
+
+                                            <td>
+
+                                                <input type="date"
+                                                       name="line_expense_date"
+                                                       required="required"
+                                                       class="form-control"
+                                                       t-att-value="today"/>
+
+                                            </td>
+
+                                            <td>
+
+                                                <input type="text"
+                                                       name="line_description"
+                                                       required="required"
+                                                       class="form-control"
+                                                       placeholder="Description"/>
+
+                                            </td>
+
+                                            <td>
+
+                                                <select name="line_category_id"
+                                                        required="required"
+                                                        class="form-select">
+
+                                                    <option value="">
+                                                        Select Category
+                                                    </option>
+
+                                                    <t t-foreach="categories"
+                                                       t-as="category">
+
+                                                        <option t-att-value="category.id">
+
+                                                            <t t-esc="category.display_name"/>
+
+                                                        </option>
+
+                                                    </t>
+
+                                                </select>
+
+                                            </td>
+
+                                            <td>
+
+                                                <input type="number"
+                                                       name="line_amount"
+                                                       required="required"
+                                                       min="0.01"
+                                                       step="0.01"
+                                                       class="form-control ga-line-amount"/>
+
+                                            </td>
+
+                                            <td>
+
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-danger ga-remove-line">
+
+                                                    <i class="fa fa-trash"/>
+
+                                                </button>
+
+                                            </td>
+
+                                        </tr>
+
+                                    </t>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+
+                        <!-- New row template -->
+
+                        <template id="ga_expense_line_template">
+
+                            <tr class="ga-expense-line-row">
+
+                                <td>
+
+                                    <input type="date"
+                                           name="line_expense_date"
+                                           required="required"
+                                           class="form-control ga-new-date"/>
+
+                                </td>
+
+                                <td>
+
+                                    <input type="text"
+                                           name="line_description"
+                                           required="required"
+                                           class="form-control"
+                                           placeholder="Description"/>
+
+                                </td>
+
+                                <td>
+
+                                    <select name="line_category_id"
+                                            required="required"
+                                            class="form-select">
+
+                                        <option value="">
+                                            Select Category
+                                        </option>
+
+                                        <t t-foreach="categories"
+                                           t-as="category">
+
+                                            <option t-att-value="category.id">
+                                                <t t-esc="category.display_name"/>
+                                            </option>
+
+                                        </t>
+
+                                    </select>
+
+                                </td>
+
+                                <td>
+
+                                    <input type="number"
+                                           name="line_amount"
+                                           required="required"
+                                           min="0.01"
+                                           step="0.01"
+                                           class="form-control ga-line-amount"/>
+
+                                </td>
+
+                                <td>
+
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-danger ga-remove-line">
+
+                                        <i class="fa fa-trash"/>
+
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        </template>
+
+
+                        <div class="ga-total-wrapper">
+
+                            <span>
+                                Total Expense
+                            </span>
+
+                            <strong id="ga_expense_total">
+                                0.00
+                            </strong>
+
+                            <span class="ms-1">
+                                <t t-esc="employee.company_id.currency_id.name"/>
+                            </span>
+
+                        </div>
+
+
+                        <hr class="my-4"/>
+
+
+                        <div>
+
+                            <label class="form-label">
+                                Receipts / Attachments
+                            </label>
+
+                            <input type="file"
+                                   name="receipt_files"
+                                   multiple="multiple"
+                                   class="form-control"/>
+
+                            <small class="text-muted">
+                                You can upload multiple receipts.
+                            </small>
+
+                        </div>
+
+
+                        <!-- Existing attachments -->
+
+                        <div t-if="expense and expense.attachment_ids"
+                             class="mt-4">
+
+                            <h6>
+                                Existing Attachments
+                            </h6>
+
+                            <div t-foreach="expense.attachment_ids"
+                                 t-as="attachment"
+                                 class="ga-attachment-item">
+
+                                <a t-att-href="'/my/expenses/%s/attachment/%s' % (expense.id, attachment.id)">
+
+                                    <i class="fa fa-paperclip me-2"/>
+
+                                    <t t-esc="attachment.name"/>
+
+                                </a>
+
+
+                                <button type="submit"
+                                        t-att-form="'delete_attachment_%s' % attachment.id"
+                                        class="btn btn-sm btn-outline-danger">
+
+                                    Delete
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+
+                            <a t-att-href="('/my/expenses/%s' % expense.id) if expense else '/my/expenses'"
+                               class="btn btn-light">
+
+                                Cancel
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn ga-primary-btn">
+
+                                <i class="fa fa-save me-1"/>
+
+                                <t t-if="expense">
+                                    Update Expense
+                                </t>
+
+                                <t t-else="">
+                                    Save Expense
+                                </t>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+
+                <!-- separate delete attachment forms -->
+
+                <t t-if="expense">
+
+                    <t t-foreach="expense.attachment_ids"
+                       t-as="attachment">
+
+                        <form t-att-id="'delete_attachment_%s' % attachment.id"
+                              t-att-action="'/my/expenses/%s/attachment/%s/delete' % (expense.id, attachment.id)"
+                              method="post">
+
+                            <input type="hidden"
+                                   name="csrf_token"
+                                   t-att-value="request.csrf_token()"/>
+
+                        </form>
+
+                    </t>
+
+                </t>
+
+            </div>
+
+        </t>
+
+    </template>
+
+
+    <!-- ===================================================== -->
+    <!-- DETAIL -->
+    <!-- ===================================================== -->
+
+    <template id="portal_employee_expense_detail"
+              name="Expense Details">
+
+        <t t-call="portal.portal_layout">
+
+            <div class="ga-expense-portal">
+
+                <t t-if="success">
+
+                    <div class="alert alert-success">
+                        <t t-esc="success"/>
+                    </div>
+
+                </t>
+
+                <t t-if="error">
+
+                    <div class="alert alert-danger">
+                        <t t-esc="error"/>
+                    </div>
+
+                </t>
+
+
+                <div class="ga-page-header">
+
+                    <div>
+
+                        <a href="/my/expenses/list"
+                           class="ga-back-link">
+
+                            <i class="fa fa-arrow-left me-1"/>
+
+                            My Expenses
+
+                        </a>
+
+                        <h2 class="mt-2">
+                            <t t-esc="expense.name"/>
+                        </h2>
+
+                    </div>
+
+
+                    <div>
+
+                        <span t-attf-class="ga-status ga-status-#{expense.state}">
+
+                            <t t-esc="expense.state.replace('_', ' ').title()"/>
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="ga-content-card p-4">
+
+                    <div class="row mb-4">
+
+                        <div class="col-md-3">
+
+                            <small class="text-muted">
+                                Employee
+                            </small>
+
+                            <div class="fw-bold">
+                                <t t-esc="expense.employee_id.name"/>
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-3">
+
+                            <small class="text-muted">
+                                Date
+                            </small>
+
+                            <div class="fw-bold">
+                                <span t-field="expense.date"/>
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-3">
+
+                            <small class="text-muted">
+                                Paid By
+                            </small>
+
+                            <div class="fw-bold">
+                                Employee
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-3">
+
+                            <small class="text-muted">
+                                Total
+                            </small>
+
+                            <div class="fw-bold">
+
+                                <span t-field="expense.total_amount_currency"
+                                      t-options='{
+                                        "widget": "monetary",
+                                        "display_currency": expense.currency_id
+                                      }'/>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <h5 class="mb-3">
+                        Expense Lines
+                    </h5>
+
+
+                    <div class="table-responsive">
+
+                        <table class="table ga-line-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th class="text-end">
+                                        Amount
+                                    </th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <t t-foreach="expense.monthly_expense_line_ids"
+                                   t-as="line">
+
+                                    <tr>
+
+                                        <td>
+                                            <span t-field="line.expense_date"/>
+                                        </td>
+
+                                        <td>
+                                            <t t-esc="line.description"/>
+                                        </td>
+
+                                        <td>
+                                            <t t-esc="line.category_id.display_name"/>
+                                        </td>
+
+                                        <td class="text-end">
+
+                                            <span t-field="line.amount"
+                                                  t-options='{
+                                                    "widget": "monetary",
+                                                    "display_currency": line.currency_id
+                                                  }'/>
+
+                                        </td>
+
+                                    </tr>
+
+                                </t>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <div t-if="expense.attachment_ids"
+                         class="mt-4">
+
+                        <h5>
+                            Attachments
+                        </h5>
+
+                        <div class="ga-attachment-list">
+
+                            <a t-foreach="expense.attachment_ids"
+                               t-as="attachment"
+                               t-att-href="'/my/expenses/%s/attachment/%s' % (expense.id, attachment.id)"
+                               class="ga-attachment-link">
+
+                                <i class="fa fa-paperclip me-2"/>
+
+                                <t t-esc="attachment.name"/>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+
+                        <a t-if="expense.state == 'draft'"
+                           t-att-href="'/my/expenses/%s/edit' % expense.id"
+                           class="btn ga-outline-btn">
+
+                            <i class="fa fa-pencil me-1"/>
+
+                            Edit
+
+                        </a>
+
+
+                        <form t-if="expense.state == 'draft'"
+                              t-att-action="'/my/expenses/%s/delete' % expense.id"
+                              method="post"
+                              class="d-inline">
+
+                            <input type="hidden"
+                                   name="csrf_token"
+                                   t-att-value="request.csrf_token()"/>
+
+                            <button type="submit"
+                                    class="btn btn-outline-danger"
+                                    onclick="return confirm('Are you sure you want to delete this expense?');">
+
+                                <i class="fa fa-trash me-1"/>
+
+                                Delete
+
+                            </button>
+
+                        </form>
+
+
+                        <form t-if="expense.state == 'draft'"
+                              t-att-action="'/my/expenses/%s/submit' % expense.id"
+                              method="post"
+                              class="d-inline">
+
+                            <input type="hidden"
+                                   name="csrf_token"
+                                   t-att-value="request.csrf_token()"/>
+
+                            <button type="submit"
+                                    class="btn ga-primary-btn"
+                                    onclick="return confirm('Submit this expense for approval?');">
+
+                                <i class="fa fa-paper-plane me-1"/>
+
+                                Submit for Approval
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </t>
+
+    </template>
+
+</odoo>

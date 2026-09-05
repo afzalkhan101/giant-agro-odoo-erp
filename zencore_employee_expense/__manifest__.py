@@ -8,25 +8,30 @@
         expense form, submit expenses for approval, and generate
         accounting entries after approval.
     """,
-    'author': 'Afzal khan',
+    'author': 'Afzal Khan',
     'website': '',
     'category': 'Giant Agro Processing Ltd',
     'license': 'LGPL-3',
-
     'depends': [
         'account',
         'hr_expense',
+        'portal',
+        'website',
     ],
-
     'data': [
         'security/ir.model.access.csv',
         'views/hr_expenses_line_views.xml',
         'views/hr_expenses.xml',
-
+        'views/expenses_category_views.xml',
+        'views/expense_portal_templates.xml',
     ],
 
-    'demo': [],
-
+    'assets': {
+        'web.assets_frontend': [
+            'zencore_employee_expense/static/src/scss/expense_portal.scss',
+            'zencore_employee_expense/static/src/js/expense_portal.js',
+        ],
+    },
     'installable': True,
     'application': True,
 }

@@ -1,48 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
-
-    <record id="view_hr_expense_form_inherit_giant_agro"
-            model="ir.ui.view">
-
-        <field name="name">
-            hr.expense.form.inherit.giant.agro
-        </field>
-
+    <record id="hr_expense_form_monthly_expense" model="ir.ui.view">
+        <field name="name">hr.expense.form.monthly.expense</field>
         <field name="model">hr.expense</field>
-
         <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
 
         <field name="arch" type="xml">
 
+            <!-- Hide Product -->
+            <xpath expr="//label[@for='product_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                <attribute name="required">0</attribute>
+            </xpath>
+
+            <!-- Hide Date -->
+            <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Hide Account -->
+            <xpath expr="//field[@name='account_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Hide Total Amount Currency -->
+            <xpath expr="//label[@for='total_amount_currency']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='total_amount_currency']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Hide Product Cost Label -->
+            <xpath expr="//label[@name='total_amount_product_cost_label']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Hide Multi Currency Label -->
+            <xpath expr="//label[@name='total_amount_multicurrency_label']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Hide Standard Total -->
+            <xpath expr="//field[@name='total_amount'][not(@invisible)]"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Monthly Expense Lines -->
             <xpath expr="//sheet" position="inside">
 
                 <separator string="Monthly Expense Lines"/>
 
                 <field name="monthly_expense_line_ids"
-                        readonly="state != 'draft'">
+                       readonly="state != 'draft'">
 
-                        <list editable="bottom">
+                    <list editable="bottom">
 
-                            <field name="expense_date"/>
+                        <field name="expense_date"/>
 
-                            <field name="description"/>
+                        <field name="description"/>
 
-                            <field name="category_id"
-                                options="{'no_create': True}"/>
+                        <field name="category_id"
+                               options="{'no_create': True, 'no_open': True}"/>
 
-                            <field name="account_id"
-                                column_invisible="True"/>
+                        <field name="account_id"
+                               column_invisible="True"/>
 
-                            <field name="amount"
-                                sum="Total"/>
+                        <field name="amount"
+                               sum="Total"/>
 
-                            <field name="currency_id"
-                                column_invisible="True"/>
+                        <field name="currency_id"
+                               column_invisible="True"/>
 
-                        </list>
+                        <field name="company_id"
+                               column_invisible="True"/>
 
-                    </field>
+                    </list>
+
+                </field>
 
             </xpath>
 

@@ -1,15 +1,23 @@
-
 from odoo import api, fields, models
+
 
 class HrExpenseLine(models.Model):
     _name = "hr.expense.line"
     _description = "Monthly Expense Line"
+    _order = "expense_date, id"
 
     expense_id = fields.Many2one(
         "hr.expense",
         string="Monthly Expense",
         required=True,
         ondelete="cascade",
+    )
+
+    company_id = fields.Many2one(
+        "res.company",
+        related="expense_id.company_id",
+        store=True,
+        readonly=True,
     )
 
     expense_date = fields.Date(
@@ -29,7 +37,6 @@ class HrExpenseLine(models.Model):
         domain="[('can_be_expensed', '=', True)]",
     )
 
-    # Category/Product থেকে automatically Expense Account আসবে
     account_id = fields.Many2one(
         "account.account",
         string="Expense Account",
@@ -44,21 +51,29 @@ class HrExpenseLine(models.Model):
     )
 
     currency_id = fields.Many2one(
+        "res.currency",
         related="expense_id.currency_id",
-        store=True,
         readonly=True,
     )
 
-    @api.depends("category_id", "expense_id.company_id")
+    @api.depends(
+        "category_id",
+        "expense_id.company_id",
+    )
     def _compute_account_id(self):
         for line in self:
             line.account_id = False
 
-            if line.category_id:
-                company = line.expense_id.company_id or self.env.company
+            if not line.category_id:
+                continue
 
-                product = line.category_id.with_company(company)
+            company = (
+                line.expense_id.company_id
+                or self.env.company
+            )
 
-                line.account_id = (
-                    product._get_product_accounts().get("expense")
-                )
+            product = line.category_id.with_company(company)
+
+            accounts = product._get_product_accounts()
+
+            line.account_id = accounts.get("expense")
