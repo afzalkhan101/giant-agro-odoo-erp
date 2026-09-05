@@ -2,10 +2,6 @@
 
 <odoo>
 
-    <!-- ===================================================== -->
-    <!-- PORTAL HOME CARD -->
-    <!-- ===================================================== -->
-
     <template id="portal_my_home_employee_expense"
               inherit_id="portal.portal_my_home"
               name="Employee Expenses">
@@ -47,9 +43,6 @@
     </template>
 
 
-    <!-- ===================================================== -->
-    <!-- EMPLOYEE NOT FOUND -->
-    <!-- ===================================================== -->
 
     <template id="portal_employee_not_found"
               name="Employee Not Found">
@@ -620,11 +613,9 @@
             <div class="ga-expense-portal">
 
                 <t t-if="error">
-
                     <div class="alert alert-danger">
                         <t t-esc="error"/>
                     </div>
-
                 </t>
 
 
@@ -726,6 +717,7 @@
                                 <thead>
 
                                     <tr>
+
                                         <th style="min-width:140px">
                                             Date
                                         </th>
@@ -742,7 +734,12 @@
                                             Amount
                                         </th>
 
+                                        <th style="min-width:260px">
+                                            Document
+                                        </th>
+
                                         <th width="50"/>
+
                                     </tr>
 
                                 </thead>
@@ -750,6 +747,7 @@
 
                                 <tbody id="ga_expense_lines">
 
+                                    <!-- Existing lines -->
                                     <t t-if="expense and expense.monthly_expense_line_ids">
 
                                         <t t-foreach="expense.monthly_expense_line_ids"
@@ -758,6 +756,10 @@
                                             <tr class="ga-expense-line-row">
 
                                                 <td>
+
+                                                    <input type="hidden"
+                                                           name="line_id"
+                                                           t-att-value="line.id"/>
 
                                                     <input type="date"
                                                            name="line_expense_date"
@@ -773,6 +775,7 @@
                                                            name="line_description"
                                                            required="required"
                                                            class="form-control"
+                                                           placeholder="Description"
                                                            t-att-value="line.description"/>
 
                                                 </td>
@@ -817,6 +820,35 @@
 
                                                 <td>
 
+                                                    <input type="file"
+                                                           name="line_document"
+                                                           class="form-control"
+                                                           accept=".pdf,.jpg,.jpeg,.png"/>
+
+                                                    <div t-if="line.document"
+                                                         class="mt-2">
+
+                                                        <a t-att-href="'/my/expenses/%s/line/%s/document' % (expense.id, line.id)"
+                                                           class="text-decoration-none"
+                                                           target="_blank">
+
+                                                            <i class="fa fa-paperclip me-1"/>
+
+                                                            <t t-esc="line.document_filename or 'View Document'"/>
+
+                                                        </a>
+
+                                                    </div>
+
+                                                    <small t-if="line.document"
+                                                           class="text-muted d-block mt-1">
+                                                        Select another file to replace the existing document.
+                                                    </small>
+
+                                                </td>
+
+                                                <td class="text-center">
+
                                                     <button type="button"
                                                             class="btn btn-sm btn-outline-danger ga-remove-line">
 
@@ -833,11 +865,16 @@
                                     </t>
 
 
+                                    <!-- Initial new line -->
                                     <t t-else="">
 
                                         <tr class="ga-expense-line-row">
 
                                             <td>
+
+                                                <input type="hidden"
+                                                       name="line_id"
+                                                       value=""/>
 
                                                 <input type="date"
                                                        name="line_expense_date"
@@ -895,6 +932,15 @@
 
                                             <td>
 
+                                                <input type="file"
+                                                       name="line_document"
+                                                       class="form-control"
+                                                       accept=".pdf,.jpg,.jpeg,.png"/>
+
+                                            </td>
+
+                                            <td class="text-center">
+
                                                 <button type="button"
                                                         class="btn btn-sm btn-outline-danger ga-remove-line">
 
@@ -916,12 +962,15 @@
 
 
                         <!-- New row template -->
-
                         <template id="ga_expense_line_template">
 
                             <tr class="ga-expense-line-row">
 
                                 <td>
+
+                                    <input type="hidden"
+                                           name="line_id"
+                                           value=""/>
 
                                     <input type="date"
                                            name="line_expense_date"
@@ -954,7 +1003,9 @@
                                            t-as="category">
 
                                             <option t-att-value="category.id">
+
                                                 <t t-esc="category.display_name"/>
+
                                             </option>
 
                                         </t>
@@ -975,6 +1026,15 @@
                                 </td>
 
                                 <td>
+
+                                    <input type="file"
+                                           name="line_document"
+                                           class="form-control"
+                                           accept=".pdf,.jpg,.jpeg,.png"/>
+
+                                </td>
+
+                                <td class="text-center">
 
                                     <button type="button"
                                             class="btn btn-sm btn-outline-danger ga-remove-line">
@@ -1003,62 +1063,6 @@
                             <span class="ms-1">
                                 <t t-esc="employee.company_id.currency_id.name"/>
                             </span>
-
-                        </div>
-
-
-                        <hr class="my-4"/>
-
-
-                        <div>
-
-                            <label class="form-label">
-                                Receipts / Attachments
-                            </label>
-
-                            <input type="file"
-                                   name="receipt_files"
-                                   multiple="multiple"
-                                   class="form-control"/>
-
-                            <small class="text-muted">
-                                You can upload multiple receipts.
-                            </small>
-
-                        </div>
-
-
-                        <!-- Existing attachments -->
-
-                        <div t-if="expense and expense.attachment_ids"
-                             class="mt-4">
-
-                            <h6>
-                                Existing Attachments
-                            </h6>
-
-                            <div t-foreach="expense.attachment_ids"
-                                 t-as="attachment"
-                                 class="ga-attachment-item">
-
-                                <a t-att-href="'/my/expenses/%s/attachment/%s' % (expense.id, attachment.id)">
-
-                                    <i class="fa fa-paperclip me-2"/>
-
-                                    <t t-esc="attachment.name"/>
-
-                                </a>
-
-
-                                <button type="submit"
-                                        t-att-form="'delete_attachment_%s' % attachment.id"
-                                        class="btn btn-sm btn-outline-danger">
-
-                                    Delete
-
-                                </button>
-
-                            </div>
 
                         </div>
 
@@ -1092,28 +1096,6 @@
                     </div>
 
                 </form>
-
-
-                <!-- separate delete attachment forms -->
-
-                <t t-if="expense">
-
-                    <t t-foreach="expense.attachment_ids"
-                       t-as="attachment">
-
-                        <form t-att-id="'delete_attachment_%s' % attachment.id"
-                              t-att-action="'/my/expenses/%s/attachment/%s/delete' % (expense.id, attachment.id)"
-                              method="post">
-
-                            <input type="hidden"
-                                   name="csrf_token"
-                                   t-att-value="request.csrf_token()"/>
-
-                        </form>
-
-                    </t>
-
-                </t>
 
             </div>
 
@@ -1259,15 +1241,25 @@
                             <thead>
 
                                 <tr>
+
                                     <th>Date</th>
+
                                     <th>Description</th>
+
                                     <th>Category</th>
+
                                     <th class="text-end">
                                         Amount
                                     </th>
+
+                                    <th>
+                                        Document
+                                    </th>
+
                                 </tr>
 
                             </thead>
+
 
                             <tbody>
 
@@ -1298,6 +1290,40 @@
 
                                         </td>
 
+                                        <td>
+
+                                            <a t-if="line.document"
+                                               t-att-href="'/my/expenses/%s/line/%s/document' % (expense.id, line.id)"
+                                               class="btn btn-sm ga-outline-btn"
+                                               target="_blank">
+
+                                                <i class="fa fa-download me-1"/>
+
+                                                <t t-esc="line.document_filename or 'Download'"/>
+
+                                            </a>
+
+                                            <span t-else=""
+                                                  class="text-muted">
+                                                No Document
+                                            </span>
+
+                                        </td>
+
+                                    </tr>
+
+                                </t>
+
+
+                                <t t-if="not expense.monthly_expense_line_ids">
+
+                                    <tr>
+
+                                        <td colspan="5"
+                                            class="text-center py-4 text-muted">
+                                            No expense lines found.
+                                        </td>
+
                                     </tr>
 
                                 </t>
@@ -1305,31 +1331,6 @@
                             </tbody>
 
                         </table>
-
-                    </div>
-
-
-                    <div t-if="expense.attachment_ids"
-                         class="mt-4">
-
-                        <h5>
-                            Attachments
-                        </h5>
-
-                        <div class="ga-attachment-list">
-
-                            <a t-foreach="expense.attachment_ids"
-                               t-as="attachment"
-                               t-att-href="'/my/expenses/%s/attachment/%s' % (expense.id, attachment.id)"
-                               class="ga-attachment-link">
-
-                                <i class="fa fa-paperclip me-2"/>
-
-                                <t t-esc="attachment.name"/>
-
-                            </a>
-
-                        </div>
 
                     </div>
 

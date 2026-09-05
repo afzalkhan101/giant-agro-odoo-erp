@@ -56,6 +56,15 @@ class HrExpenseLine(models.Model):
         readonly=True,
     )
 
+    document = fields.Binary(
+        string="Document",
+        attachment=True,
+    )
+
+    document_filename = fields.Char(
+        string="Document Filename",
+    )
+
     @api.depends(
         "category_id",
         "expense_id.company_id",
@@ -72,8 +81,12 @@ class HrExpenseLine(models.Model):
                 or self.env.company
             )
 
-            product = line.category_id.with_company(company)
+            product = line.category_id.with_company(
+                company
+            )
 
             accounts = product._get_product_accounts()
 
-            line.account_id = accounts.get("expense")
+            line.account_id = accounts.get(
+                "expense"
+            )
