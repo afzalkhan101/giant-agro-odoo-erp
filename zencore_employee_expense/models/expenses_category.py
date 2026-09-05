@@ -12,9 +12,8 @@ class HrExpenseCategory(models.Model):
         "account.account",
         string="Account Payable",
     )
+
     
-
-
 class HrExpense(models.Model):
     _inherit = "hr.expense"
 
