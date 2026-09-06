@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="view_hr_expense_form_inherit_giant_agro"
             model="ir.ui.view">
         <field name="name">
@@ -19,14 +20,12 @@
                 <attribute name="required">0</attribute>
             </xpath>
 
-
             <xpath expr="//field[@name='date']"
                    position="attributes">
 
                 <attribute name="invisible">1</attribute>
 
             </xpath>
-
 
             <xpath expr="//field[@name='account_id']"
                    position="attributes">
@@ -35,10 +34,6 @@
 
             </xpath>
 
-
-
-            <!-- Hide Attach Receipt Widget -->
-
             <xpath expr="//widget[@name='attach_document']"
                 position="attributes">
 
@@ -46,10 +41,7 @@
 
             </xpath>
 
-
             
-
-
             <xpath expr="//label[@for='total_amount_currency']"
                    position="attributes">
 

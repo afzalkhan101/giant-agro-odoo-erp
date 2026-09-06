@@ -1,4 +1,3 @@
-/** @odoo-module **/
 
 function initExpensePortal() {
 
@@ -110,7 +109,6 @@ function initExpensePortal() {
         .querySelectorAll(".ga-expense-line-row")
         .forEach(bindRow);
 
-
     if (addButton && template && tbody) {
 
         addButton.addEventListener(
@@ -151,8 +149,7 @@ function initExpensePortal() {
         );
 
     }
-
-
+    
     calculateTotal();
 }
 

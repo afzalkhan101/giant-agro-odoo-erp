@@ -1,12 +1,9 @@
 import base64
 import mimetypes
-
 from urllib.parse import urlencode
-
 from odoo import Command, fields, http, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, content_disposition
-
 from odoo.addons.portal.controllers.portal import (
     CustomerPortal,
     pager as portal_pager,
@@ -17,9 +14,6 @@ class EmployeeExpensePortal(CustomerPortal):
 
     _items_per_page = 10
 
-    # =========================================================
-    # HELPERS
-    # =========================================================
 
     def _get_employee(self):
         return (
@@ -142,10 +136,7 @@ class EmployeeExpensePortal(CustomerPortal):
                 query,
             )
         )
-
-    # =========================================================
-    # PARSE EXPENSE LINES
-    # =========================================================
+    
 
     def _parse_expense_lines(
         self,
@@ -202,9 +193,6 @@ class EmployeeExpensePortal(CustomerPortal):
             .sudo()
         )
 
-        # =====================================================
-        # EACH PORTAL ROW
-        # =====================================================
 
         for index in range(
             line_count
@@ -240,9 +228,7 @@ class EmployeeExpensePortal(CustomerPortal):
                 else ""
             )
 
-            # -------------------------------------------------
-            # Completely blank line
-            # -------------------------------------------------
+
 
             if not any([
                 date_value,
@@ -251,10 +237,6 @@ class EmployeeExpensePortal(CustomerPortal):
                 amount_value,
             ]):
                 continue
-
-            # -------------------------------------------------
-            # Date
-            # -------------------------------------------------
 
             if not date_value:
                 raise ValidationError(
@@ -279,9 +261,7 @@ class EmployeeExpensePortal(CustomerPortal):
                     )
                 )
 
-            # -------------------------------------------------
-            # Description
-            # -------------------------------------------------
+            
 
             if not description:
                 raise ValidationError(
@@ -289,10 +269,7 @@ class EmployeeExpensePortal(CustomerPortal):
                         "Description is required."
                     )
                 )
-
-            # -------------------------------------------------
-            # Category
-            # -------------------------------------------------
+            
 
             if not category_value:
                 raise ValidationError(
@@ -357,10 +334,7 @@ class EmployeeExpensePortal(CustomerPortal):
                         "Invalid Expense Category."
                     )
                 )
-
-            # -------------------------------------------------
-            # Amount
-            # -------------------------------------------------
+            
 
             if not amount_value:
 
@@ -395,10 +369,7 @@ class EmployeeExpensePortal(CustomerPortal):
                         "be greater than 0."
                     )
                 )
-
-            # =================================================
-            # LINE VALUES
-            # =================================================
+            
 
             vals = {
                 "expense_date": (
@@ -418,9 +389,6 @@ class EmployeeExpensePortal(CustomerPortal):
                 ),
             }
 
-            # =================================================
-            # LINE DOCUMENT
-            # =================================================
 
             uploaded_file = False
 
@@ -453,9 +421,6 @@ class EmployeeExpensePortal(CustomerPortal):
                         ),
                     })
 
-            # =================================================
-            # EXISTING LINE ID
-            # =================================================
 
             line_id = False
 
@@ -491,9 +456,6 @@ class EmployeeExpensePortal(CustomerPortal):
             if not first_date:
                 first_date = expense_date
 
-        # =====================================================
-        # REQUIRED LINE
-        # =====================================================
 
         if not line_data:
 
@@ -516,10 +478,7 @@ class EmployeeExpensePortal(CustomerPortal):
                 first_date
             ),
         }
-
-    # =========================================================
-    # SYNC PARENT EXPENSE
-    # =========================================================
+    
 
     def _sync_expense(
         self,
@@ -575,10 +534,7 @@ class EmployeeExpensePortal(CustomerPortal):
         )
 
         return total
-
-    # =========================================================
-    # DASHBOARD
-    # =========================================================
+    
 
     @http.route(
         ["/my/expenses"],
@@ -715,10 +671,6 @@ class EmployeeExpensePortal(CustomerPortal):
             values,
         )
 
-    # =========================================================
-    # EXPENSE LIST
-    # =========================================================
-
     @http.route(
         [
             "/my/expenses/list",
@@ -807,10 +759,7 @@ class EmployeeExpensePortal(CustomerPortal):
             values,
         )
 
-    # =========================================================
-    # CREATE FORM
-    # =========================================================
-
+  
     @http.route(
         ["/my/expenses/create"],
         type="http",
@@ -875,10 +824,7 @@ class EmployeeExpensePortal(CustomerPortal):
             values,
         )
 
-    # =========================================================
-    # CREATE EXPENSE
-    # =========================================================
-
+    
     @http.route(
         ["/my/expenses/save"],
         type="http",
@@ -1015,9 +961,6 @@ class EmployeeExpensePortal(CustomerPortal):
                 )
             )
 
-    # =========================================================
-    # EXPENSE DETAIL
-    # =========================================================
 
     @http.route(
         [
@@ -1079,9 +1022,6 @@ class EmployeeExpensePortal(CustomerPortal):
             values,
         )
 
-    # =========================================================
-    # EDIT FORM
-    # =========================================================
 
     @http.route(
         [
@@ -1173,9 +1113,7 @@ class EmployeeExpensePortal(CustomerPortal):
             values,
         )
 
-    # =========================================================
-    # UPDATE EXPENSE
-    # =========================================================
+   
 
     @http.route(
         [
@@ -1321,9 +1259,6 @@ class EmployeeExpensePortal(CustomerPortal):
                         )
                     )
 
-            # =================================================
-            # DELETE REMOVED PORTAL ROWS
-            # =================================================
 
             for line in existing_lines:
 
@@ -1395,9 +1330,6 @@ class EmployeeExpensePortal(CustomerPortal):
                 )
             )
 
-    # =========================================================
-    # DELETE EXPENSE
-    # =========================================================
 
     @http.route(
         [
@@ -1460,10 +1392,6 @@ class EmployeeExpensePortal(CustomerPortal):
                 ),
             )
         )
-
-    # =========================================================
-    # SUBMIT EXPENSE
-    # =========================================================
 
     @http.route(
         [
@@ -1580,9 +1508,6 @@ class EmployeeExpensePortal(CustomerPortal):
                 )
             )
 
-    # =========================================================
-    # DOWNLOAD LINE DOCUMENT
-    # =========================================================
 
     @http.route(
         [
@@ -1602,8 +1527,7 @@ class EmployeeExpensePortal(CustomerPortal):
         **kwargs
     ):
 
-        # Verify parent expense belongs
-        # to logged-in employee
+
         expense = (
             self._get_own_expense(
                 expense_id
@@ -1613,8 +1537,7 @@ class EmployeeExpensePortal(CustomerPortal):
         if not expense:
             return request.not_found()
 
-        # Find only line belonging
-        # to this expense
+ 
         line = (
             request.env[
                 "hr.expense.line"
