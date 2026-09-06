@@ -2,26 +2,28 @@
 
 <odoo>
 
+
     <record id="hr_expense_form_monthly_expense"
             model="ir.ui.view">
 
-        <field name="name">hr.expense.form.monthly.expense</field>
+
+        <field name="name">
+            hr.expense.form.monthly.expense
+        </field>
+
 
         <field name="model">hr.expense</field>
+
 
         <field name="inherit_id"
                ref="hr_expense.hr_expense_view_form"/>
 
-        <field name="arch"
-               type="xml">
 
-            <!-- Hide Product -->
-            <xpath expr="//label[@for='product_id']"
-                   position="attributes">
 
-                <attribute name="invisible">1</attribute>
+        <field name="arch" type="xml">
 
-            </xpath>
+
+            <!-- Hide Default Product -->
 
             <xpath expr="//field[@name='product_id']"
                    position="attributes">
@@ -32,7 +34,9 @@
             </xpath>
 
 
-            <!-- Hide Date -->
+
+            <!-- Hide Default Expense Date -->
+
             <xpath expr="//field[@name='date']"
                    position="attributes">
 
@@ -41,7 +45,10 @@
             </xpath>
 
 
-            <!-- Hide Account -->
+
+
+            <!-- Hide Default Expense Account -->
+
             <xpath expr="//field[@name='account_id']"
                    position="attributes">
 
@@ -50,13 +57,13 @@
             </xpath>
 
 
-            <!-- Hide Total Amount Currency -->
-            <xpath expr="//label[@for='total_amount_currency']"
-                   position="attributes">
+            <!-- Hide Attach Receipt Button -->
 
-                <attribute name="invisible">1</attribute>
+       
 
-            </xpath>
+
+
+            <!-- Hide Standard Amount -->
 
             <xpath expr="//field[@name='total_amount_currency']"
                    position="attributes">
@@ -66,8 +73,8 @@
             </xpath>
 
 
-            <!-- Hide Product Cost Label -->
-            <xpath expr="//label[@name='total_amount_product_cost_label']"
+
+            <xpath expr="//field[@name='total_amount']"
                    position="attributes">
 
                 <attribute name="invisible">1</attribute>
@@ -75,38 +82,39 @@
             </xpath>
 
 
-            <!-- Hide Multi Currency Label -->
-            <xpath expr="//label[@name='total_amount_multicurrency_label']"
-                   position="attributes">
-
-                <attribute name="invisible">1</attribute>
-
-            </xpath>
 
 
-            <!-- Hide Standard Total -->
-            <xpath expr="//field[@name='total_amount'][not(@invisible)]"
-                   position="attributes">
 
-                <attribute name="invisible">1</attribute>
+            <!-- Add Monthly Expense Lines -->
 
-            </xpath>
-
-
-            <!-- Monthly Expense Lines -->
             <xpath expr="//sheet"
                    position="inside">
 
+
                 <separator string="Monthly Expense Lines"/>
+
+
 
                 <field name="monthly_expense_line_ids"
                        readonly="state != 'draft'">
 
+
                     <list editable="bottom">
+
+
+                        <!-- Expense Date -->
 
                         <field name="expense_date"/>
 
+
+
+                        <!-- Description -->
+
                         <field name="description"/>
+
+
+
+                        <!-- Category -->
 
                         <field name="category_id"
                                options="{
@@ -114,36 +122,58 @@
                                    'no_open': True
                                }"/>
 
+
+
+                        <!-- Auto Generated Account -->
+
                         <field name="account_id"
-                               column_invisible="True"/>
+                               readonly="1"/>
+
+
+
+                        <!-- Amount -->
 
                         <field name="amount"
                                sum="Total"/>
 
 
-                        <!-- Line Document -->
+
+                        <!-- Document -->
+
                         <field name="document"
                                string="Document"
                                filename="document_filename"/>
+
+
 
                         <field name="document_filename"
                                column_invisible="True"/>
 
 
+
+                        <!-- Technical Fields -->
+
                         <field name="currency_id"
                                column_invisible="True"/>
+
 
                         <field name="company_id"
                                column_invisible="True"/>
 
+
                     </list>
+
 
                 </field>
 
+
             </xpath>
+
 
         </field>
 
+
     </record>
+
 
 </odoo>
