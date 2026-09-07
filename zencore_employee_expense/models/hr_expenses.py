@@ -1,4 +1,4 @@
-from odoo import fields, models, Command, _
+from odoo import fields, models, Command, _ ,api
 from odoo.exceptions import ValidationError
 
 
@@ -8,6 +8,20 @@ class HrExpense(models.Model):
     monthly_expense_line_ids = fields.One2many(
         "hr.expense.line", "expense_id", string="Monthly Expense Lines",
     )
+
+
+    @api.depends(
+        "employee_id",
+        "employee_id.department_id",
+        "company_id",
+        "company_id.expense_admin_id",
+    )
+    def _compute_from_employee_id(self):
+        super()._compute_from_employee_id()
+
+        for expense in self:
+            if expense.company_id.expense_admin_id:
+                expense.manager_id = expense.company_id.expense_admin_id
 
     def _sync_monthly_expense_total(self):
         for expense in self:

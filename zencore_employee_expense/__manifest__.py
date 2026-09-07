@@ -24,6 +24,7 @@
         'views/hr_expenses.xml',
         'views/expenses_category_views.xml',
         'views/expense_portal_templates.xml',
+        'views/res_config_settings_views.xml',
     ],
 
     'assets': {
